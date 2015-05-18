@@ -21,13 +21,19 @@ def mark_selected(request, menu_item):
 			menu_item.selected = True
 			return True
 	current_view = request.resolver_match.view_name
-	item_view = menu_item.link
-	if current_view == item_view:
-		menu_item.selected = True
-		return True
-	if item_view.startswith('admin:') and current_view.startswith('admin:'):
-		menu_item.selected = True
-		return True
+	
+	if menu_item.link:
+		item_view = menu_item.link
+		if current_view == item_view:
+			menu_item.selected = True
+			return True
+		if item_view.startswith('admin:') and current_view.startswith('admin:'):
+			menu_item.selected = True
+			return True
+	elif menu_item.document:
+		if 'title' in request.resolver_match.kwargs and menu_item.document.url_title == request.resolver_match.kwargs['title']:
+			menu_item.selected = True
+			return True
 
 
 def can_create_informationpage(request):
